@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class MemberResponseDTO {
+public class MemberResponseDto {
     private Long id;
     private String email;
     private String name;

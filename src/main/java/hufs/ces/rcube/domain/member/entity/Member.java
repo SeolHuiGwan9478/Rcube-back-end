@@ -20,7 +20,7 @@ public class Member {
     private Long id;
     private String email;
     private String name;
-    // password
+    private String password;
     // extra info
     @CreatedDate
     private LocalDateTime createdAt;
