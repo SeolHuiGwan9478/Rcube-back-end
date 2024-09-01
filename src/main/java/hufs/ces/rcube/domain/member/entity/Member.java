@@ -1,5 +1,9 @@
 package hufs.ces.rcube.domain.member.entity;
 
+import hufs.ces.rcube.domain.project.entity.MemberEvent;
+import hufs.ces.rcube.domain.project.entity.MemberProject;
+import hufs.ces.rcube.domain.project.entity.Post;
+import hufs.ces.rcube.domain.project.entity.Team;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.cglib.core.Local;
@@ -8,6 +12,8 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -26,4 +32,20 @@ public class Member {
     private LocalDateTime createdAt;
     @LastModifiedDate
     private LocalDateTime updatedAt;
+
+    @OneToMany(mappedBy = "member")
+    private List<MemberProject> memberProjects = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member")
+    private List<MemberEvent> memberEvents = new ArrayList<>(); //이벤트에 참여한 사람들
+
+    @ManyToOne
+    @JoinColumn(name = "TEAM_ID")
+    private Team team;
+
+    @OneToMany(mappedBy = "member")
+    private List<Post> posts = new ArrayList<>();
+
+
+
 }
