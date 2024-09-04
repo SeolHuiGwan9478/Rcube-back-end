@@ -1,12 +1,11 @@
 package hufs.ces.rcube.domain.member.entity;
 
-import hufs.ces.rcube.domain.project.entity.MemberEvent;
-import hufs.ces.rcube.domain.project.entity.MemberProject;
-import hufs.ces.rcube.domain.project.entity.Post;
-import hufs.ces.rcube.domain.project.entity.Team;
+import hufs.ces.rcube.domain.post.entity.MemberEvent;
+import hufs.ces.rcube.domain.post.entity.MemberProject;
+import hufs.ces.rcube.domain.post.entity.Post;
+import hufs.ces.rcube.domain.post.entity.Team;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.cglib.core.Local;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -43,7 +42,7 @@ public class Member {
     @JoinColumn(name = "TEAM_ID")
     private Team team;
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "author")
     private List<Post> posts = new ArrayList<>();
 
 

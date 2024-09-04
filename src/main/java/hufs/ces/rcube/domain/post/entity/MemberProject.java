@@ -1,4 +1,4 @@
-package hufs.ces.rcube.domain.project.entity;
+package hufs.ces.rcube.domain.post.entity;
 
 import hufs.ces.rcube.domain.member.entity.Member;
 import jakarta.persistence.*;
@@ -9,7 +9,6 @@ import java.time.LocalDate;
 
 @Entity
 @Getter
-@Setter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor

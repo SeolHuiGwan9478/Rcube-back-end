@@ -1,4 +1,4 @@
-package hufs.ces.rcube.domain.project.entity;
+package hufs.ces.rcube.domain.post.entity;
 
 import hufs.ces.rcube.domain.member.entity.Member;
 import jakarta.persistence.*;
@@ -8,11 +8,10 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
+
 
 @Entity
 @Getter
-@Setter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor

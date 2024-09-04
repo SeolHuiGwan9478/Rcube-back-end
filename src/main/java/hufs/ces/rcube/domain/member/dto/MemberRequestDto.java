@@ -14,4 +14,5 @@ public class MemberRequestDto { //회원 생성 및 수정 요청에 사용
     private String name;
     private  String password; //회원 생성 시 필요한 필드
 
+
 }

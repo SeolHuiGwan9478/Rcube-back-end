@@ -1,4 +1,4 @@
-package hufs.ces.rcube.domain.project.entity;
+package hufs.ces.rcube.domain.post.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -12,7 +12,6 @@ import java.util.List;
 
 @Entity
 @Getter
-@Setter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
@@ -32,9 +31,6 @@ public class Project {
     @OneToMany(mappedBy = "project")
     private List<MemberProject> memberProjects = new ArrayList<>();
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "POST_ID")
-    private Post post;
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Event> events = new ArrayList<>(); // 프로젝트는 여러 이벤트를 가짐
