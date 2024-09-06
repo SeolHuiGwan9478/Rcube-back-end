@@ -8,7 +8,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDate;
 import java.util.Optional;
 
 @Repository
@@ -30,7 +29,5 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     void deleteByTitle(String title); //제목으로 게시글 삭제
 
     Page<Post> findAll(Pageable pageable);  // 페이징과 정렬을 지원하는 메서드
-   //날짜 범위로 게시글 조회
-    Page<Post> findByCreatedAtBetween(LocalDate startDate, LocalDate endDate, Pageable pageable);
 
 }
