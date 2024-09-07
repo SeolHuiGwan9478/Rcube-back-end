@@ -53,25 +53,25 @@ public class PostService {
                 .build();
 
         Post savedPost = postRepository.save(post);
-        return convertToPostResponseDto(savedPost, "Post created successfully", HttpStatus.CREATED);
+        return  PostResponseDto.convertToPostResponseDto(savedPost, "Post created successfully", HttpStatus.CREATED);
     }
 
     public PostResponseDto getPostById(Long id) {
         Post post = postRepository.findById(id).orElseThrow(() ->
                 new IllegalArgumentException("Post not found with id: " + id));
-        return convertToPostResponseDto(post, "Post retrieved successfully", HttpStatus.OK);
+        return  PostResponseDto.convertToPostResponseDto(post, "Post retrieved successfully", HttpStatus.OK);
     }
 
     public PostResponseDto getPostByTitle(String title) {
         Post post = postRepository.findByTitle(title).orElseThrow(() ->
                 new IllegalArgumentException("Post not found with title: " + title));
-        return convertToPostResponseDto(post, "Post retrieved successfully", HttpStatus.OK);
+        return  PostResponseDto.convertToPostResponseDto(post, "Post retrieved successfully", HttpStatus.OK);
     }
 
     public Page<PostResponseDto> getPostsByAuthor(String authorName, int page, int size, String sortBy) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, sortBy));
         Page<Post> postPage = postRepository.findByAuthor(authorName, pageable);
-        return postPage.map(post -> convertToPostResponseDto(post, "Post retrieved successfully", HttpStatus.OK));
+        return postPage.map(post ->  PostResponseDto.convertToPostResponseDto(post, "Post retrieved successfully", HttpStatus.OK));
     }
 
     public Page<PostResponseDto> getPostsByEvent(Long eventId, Pageable pageable) {
@@ -80,7 +80,7 @@ public class PostService {
             throw new IllegalArgumentException("Event not found with id: " + eventId);
         }
         Page<Post> postPage = postRepository.findByEvent(event, pageable);
-        return postPage.map(post -> convertToPostResponseDto(post, "Post retrieved successfully", HttpStatus.OK));
+        return postPage.map(post ->  PostResponseDto.convertToPostResponseDto(post, "Post retrieved successfully", HttpStatus.OK));
     }
 
     public Page<PostResponseDto> getPostsByProject(Long projectId, Pageable pageable) {
@@ -89,7 +89,7 @@ public class PostService {
             throw new IllegalArgumentException("Project not found with id: " + projectId);
         }
         Page<Post> postPage = postRepository.findByProject(project, pageable);
-        return postPage.map(post -> convertToPostResponseDto(post, "Post retrieved successfully", HttpStatus.OK));
+        return postPage.map(post ->  PostResponseDto.convertToPostResponseDto(post, "Post retrieved successfully", HttpStatus.OK));
     }
 
     @Transactional
@@ -121,7 +121,7 @@ public class PostService {
                 .build();
 
         Post savedPost = postRepository.save(updatedPost);
-        return convertToPostResponseDto(savedPost, "Post updated successfully", HttpStatus.OK);
+        return PostResponseDto.convertToPostResponseDto(savedPost, "Post updated successfully", HttpStatus.OK);
     }
 
     @Transactional
@@ -132,13 +132,6 @@ public class PostService {
         postRepository.deleteById(id);
     }
 
-    @Transactional
-    public void deleteByTitle(String title) {
-        if (!postRepository.existsByTitle(title)) {
-            throw new IllegalArgumentException("Post not found with title: " + title);
-        }
-        postRepository.deleteByTitle(title);
-    }
 
     @Transactional
     public void deleteByAuthorName(PostRequestDto postRequestDto) {
@@ -154,22 +147,8 @@ public class PostService {
 
     public Page<PostResponseDto> getPosts(Pageable pageable) {
         Page<Post> postPage = postRepository.findAll(pageable);
-        return postPage.map(post -> convertToPostResponseDto(post, "Post retrieved successfully", HttpStatus.OK));
+        return postPage.map(post -> PostResponseDto.convertToPostResponseDto(post, "Post retrieved successfully", HttpStatus.OK));
     }
 
-    private PostResponseDto convertToPostResponseDto(Post post, String message, HttpStatus status) {
-        PostResponseDto.PostData postData = PostResponseDto.PostData.builder()
-                .id(post.getId())
-                .title(post.getTitle())
-                .content(post.getContent())
-                .author(post.getAuthor().getName())
-                .createdAt(post.getCreatedAt())
-                .updatedAt(post.getUpdatedAt())
-                .build();
 
-        return PostResponseDto.builder()
-                .data(postData)
-                .message(message)
-                .build();
-    }
 }

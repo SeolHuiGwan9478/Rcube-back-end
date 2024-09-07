@@ -30,7 +30,7 @@ public class PostController {
     }
 
     // 모든 게시글 조회
-    @GetMapping("/all")
+    @GetMapping
     public ResponseEntity<Page<PostResponseDto>> getAllPosts(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
@@ -53,8 +53,8 @@ public class PostController {
     }
 
     // 제목으로 게시글 조회
-    @GetMapping("/title")
-    public ResponseEntity<PostResponseDto> getPostByTitle(@RequestParam String title) {
+    @GetMapping
+    public ResponseEntity<PostResponseDto> getPostByTitle(@RequestParam("title") String title) {
         try {
             PostResponseDto post = postService.getPostByTitle(title);
             return new ResponseEntity<>(post, HttpStatus.OK);
@@ -64,9 +64,9 @@ public class PostController {
     }
 
     // 작성자 이름으로 게시글 페이징 조회
-    @GetMapping("/author/{authorName}/paged")
+    @GetMapping
     public ResponseEntity<Page<PostResponseDto>> getPostsByAuthorPaged(
-            @PathVariable String authorName,
+            @RequestParam("author") String authorName,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "createdAt") String sortBy
@@ -76,15 +76,15 @@ public class PostController {
     }
 
     // 이벤트로 게시글 페이징 조회
-    @GetMapping("/event/{eventId}")
-    public ResponseEntity<Page<PostResponseDto>> getPostsByEvent(@PathVariable Long eventId, Pageable pageable) {
+    @GetMapping
+    public ResponseEntity<Page<PostResponseDto>> getPostsByEvent(@RequestParam("event") Long eventId, Pageable pageable) {
         Page<PostResponseDto> postPage = postService.getPostsByEvent(eventId, pageable);
         return new ResponseEntity<>(postPage, HttpStatus.OK);
     }
 
     // 프로젝트로 게시글 페이징 조회
-    @GetMapping("/project/{projectId}")
-    public ResponseEntity<Page<PostResponseDto>> getPostsByProject(@PathVariable Long projectId, Pageable pageable) {
+    @GetMapping
+    public ResponseEntity<Page<PostResponseDto>> getPostsByProject(@RequestParam("project") Long projectId, Pageable pageable) {
         Page<PostResponseDto> postPage = postService.getPostsByProject(projectId, pageable);
         return new ResponseEntity<>(postPage, HttpStatus.OK);
     }
@@ -111,18 +111,8 @@ public class PostController {
         }
     }
 
-    // 제목으로 게시글 삭제
-    @DeleteMapping("/title")
-    public ResponseEntity<Void> deletePostByTitle(@RequestParam String title) {
-        try {
-            postService.deleteByTitle(title);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
 
-    @DeleteMapping("/author")
+    @DeleteMapping
     public ResponseEntity<Void> deletePostByAuthorName(@RequestBody PostRequestDto postRequestDto) {
         try {
             postService.deleteByAuthorName(postRequestDto);

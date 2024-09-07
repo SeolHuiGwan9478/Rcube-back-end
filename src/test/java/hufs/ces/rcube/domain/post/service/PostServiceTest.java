@@ -263,17 +263,6 @@ import static org.mockito.Mockito.*;
             verify(postRepository, times(1)).deleteById(1L);
         }
 
-        @Test
-        void deleteByTitle() {
-            // Given
-            when(postRepository.existsByTitle("Title")).thenReturn(true);
-
-            // When
-            postService.deleteByTitle("Title");
-
-            // Then
-            verify(postRepository, times(1)).deleteByTitle("Title");
-        }
 
         @Test
         void deleteByAuthorName() {

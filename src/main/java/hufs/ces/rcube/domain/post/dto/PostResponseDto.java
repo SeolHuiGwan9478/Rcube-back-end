@@ -26,7 +26,22 @@ public class PostResponseDto {
         private LocalDate createdAt; // 생성 시간
         private LocalDate updatedAt; // 수정 시간
     }
-    
+
+    public static PostResponseDto convertToPostResponseDto(Post post, String message, HttpStatus status) {
+        PostData postData = PostData.builder()
+                .id(post.getId())
+                .title(post.getTitle())
+                .content(post.getContent())
+                .author(post.getAuthor().getName())
+                .createdAt(post.getCreatedAt())
+                .updatedAt(post.getUpdatedAt())
+                .build();
+
+        return PostResponseDto.builder()
+                .data(postData)
+                .message(message)
+                .build();
+    }
 
 
 }

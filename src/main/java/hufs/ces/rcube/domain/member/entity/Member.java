@@ -3,7 +3,6 @@ package hufs.ces.rcube.domain.member.entity;
 import hufs.ces.rcube.domain.post.entity.MemberEvent;
 import hufs.ces.rcube.domain.post.entity.MemberProject;
 import hufs.ces.rcube.domain.post.entity.Post;
-import hufs.ces.rcube.domain.post.entity.Team;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -38,9 +37,6 @@ public class Member {
     @OneToMany(mappedBy = "member")
     private List<MemberEvent> memberEvents = new ArrayList<>(); //이벤트에 참여한 사람들
 
-    @ManyToOne
-    @JoinColumn(name = "TEAM_ID")
-    private Team team;
 
     @OneToMany(mappedBy = "author")
     private List<Post> posts = new ArrayList<>();
