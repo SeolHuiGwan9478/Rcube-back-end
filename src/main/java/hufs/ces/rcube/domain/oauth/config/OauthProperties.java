@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Getter
-@ConfigurationProperties(prefix = "oauth2") //프로퍼티 값을 객체로 바인딩
+@ConfigurationProperties(prefix = "oauth") //프로퍼티 값을 객체로 바인딩
 @AllArgsConstructor
 public class OauthProperties {
     private final Map<String, User> user = new HashMap<>();
