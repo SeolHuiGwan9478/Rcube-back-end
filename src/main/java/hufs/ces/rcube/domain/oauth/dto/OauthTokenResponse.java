@@ -1,4 +1,4 @@
-package hufs.ces.rcube.domain.oauth.Dto;
+package hufs.ces.rcube.domain.oauth.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
