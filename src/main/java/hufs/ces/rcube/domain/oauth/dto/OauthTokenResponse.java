@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor
+@Builder
 public class OauthTokenResponse {
     @JsonProperty("access_token")
     private String accessToken;
@@ -16,10 +16,5 @@ public class OauthTokenResponse {
     @JsonProperty("token_type")
     private String tokenType;
 
-    @Builder
-    public OauthTokenResponse(String accessToken, String scope, String tokenType) {
-        this.accessToken = accessToken;
-        this.scope = scope;
-        this.tokenType = tokenType;
-    }
+
 }

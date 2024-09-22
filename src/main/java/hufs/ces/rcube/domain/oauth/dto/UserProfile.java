@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
-@AllArgsConstructor
+
 @Builder
 @Getter
 public class UserProfile { //Oauth서버별로가져올 수 있는 유저 정보 다름

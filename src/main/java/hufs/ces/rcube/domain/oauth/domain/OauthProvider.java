@@ -7,13 +7,14 @@ import lombok.Getter;
 
 @Getter
 @Builder
-@AllArgsConstructor
 public class OauthProvider {
     private final String clientId;
     private final String clientSecret;
     private final String redirectUrl;
     private final String tokenUrl;
     private final String userInfoUrl;
+
+
 
 
 
