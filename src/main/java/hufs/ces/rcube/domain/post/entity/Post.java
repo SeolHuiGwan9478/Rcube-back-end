@@ -8,6 +8,8 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Entity
@@ -33,6 +35,12 @@ public class Post {
     @ManyToOne
     @JoinColumn(name = "EVENT_ID") // 선택적으로 연관될 수 있음
     private Event event;
+
+    @OneToMany(mappedBy = "post")
+    private List<PostTeckStack> postTeckStacks = new ArrayList<>();
+
+    @OneToMany(mappedBy = "post")
+    private List<Curriculum> curriculumList = new ArrayList<>();
 
     @CreatedDate
     private LocalDate createdAt;

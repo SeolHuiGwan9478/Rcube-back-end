@@ -32,10 +32,11 @@ public class Project {
     private List<MemberProject> memberProjects = new ArrayList<>();
 
 
-    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "project")
     private List<Event> events = new ArrayList<>(); // 프로젝트는 여러 이벤트를 가짐
 
-
+    @OneToMany(mappedBy = "project")
+    private List<ProjectTechStack> projectTeckStacks = new ArrayList<>();
 
 
 }

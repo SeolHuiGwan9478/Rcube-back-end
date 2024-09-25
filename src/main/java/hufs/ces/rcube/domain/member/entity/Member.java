@@ -2,6 +2,7 @@ package hufs.ces.rcube.domain.member.entity;
 
 import hufs.ces.rcube.domain.post.entity.MemberEvent;
 import hufs.ces.rcube.domain.post.entity.MemberProject;
+import hufs.ces.rcube.domain.post.entity.MemberTeckStack;
 import hufs.ces.rcube.domain.post.entity.Post;
 import jakarta.persistence.*;
 import lombok.*;
@@ -22,7 +23,7 @@ import java.util.List;
 public class Member {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String email;
+    private String email; //연락망
     private String oauthId;
     private String imageUrl;
     @Enumerated(EnumType.STRING)
@@ -44,6 +45,9 @@ public class Member {
 
     @OneToMany(mappedBy = "author")
     private List<Post> posts = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member")
+    private  List<MemberTeckStack> memberTeckStacks = new ArrayList<>();
 
     public Member(String oauthId, String name, String email, String imageUrl, Role role) {
         this(null, oauthId, name, email, imageUrl, role);

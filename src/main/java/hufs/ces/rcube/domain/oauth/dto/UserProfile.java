@@ -21,7 +21,7 @@ public class UserProfile { //Oauth서버별로가져올 수 있는 유저 정보
                 .email(email)
                 .name(name)
                 .imageUrl(imageUrl)
-                .role(Role.GUEST)
+                .role(Role.USER)
                 .build();
     }
 

@@ -73,12 +73,12 @@ public class OauthService {
                     header.setAcceptCharset(Collections.singletonList(StandardCharsets.UTF_8));
                 })
                 .bodyValue(tokenRequest(code, provider))
-                .retrieve()
+                .retrieve() //요청실행, 응답 가져옴
                 .onStatus(status -> !status.is2xxSuccessful(), clientResponse ->
                         Mono.error(new RuntimeException("Failed to retrieve access token: " + clientResponse.statusCode()))
                 )
-                .bodyToMono(OauthTokenResponse.class)
-                .block();
+                .bodyToMono(OauthTokenResponse.class)//반응형 프로그래밍에서 샤용되는 타입
+                .block(); //비동기처리 방식에서 동기적으로 결과를 얻기 위한 방법
     }
 
     private Member saveOrUpdate(UserProfile userProfile) {
@@ -98,7 +98,7 @@ public class OauthService {
         return formData;
     }
 
-    protected UserProfile getUserProfile(String providerName, OauthTokenResponse tokenResponse, OauthProvider provider) {
+    public UserProfile getUserProfile(String providerName, OauthTokenResponse tokenResponse, OauthProvider provider) {
         Map<String, Object> userAttributes = getUserAttributes(provider, tokenResponse);
         return OauthAttributes.extract(providerName, userAttributes);
     }

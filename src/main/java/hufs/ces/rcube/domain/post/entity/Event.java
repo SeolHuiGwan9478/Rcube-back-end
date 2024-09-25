@@ -35,7 +35,7 @@ public class Event {
     @OneToMany(mappedBy = "event")
     private List<Post> posts = new ArrayList<>(); // 이벤트와 연관된 게시글
 
-    @ManyToOne()
+    @ManyToOne
     @JoinColumn(name = "PROJECT_ID")
     private Project project; //어떤 프로젝트에 대한 이벤트
 

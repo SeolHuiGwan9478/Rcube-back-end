@@ -1,22 +1,25 @@
 package hufs.ces.rcube.domain.oauth.service;
+
 import hufs.ces.rcube.domain.member.entity.Member;
-import hufs.ces.rcube.domain.member.entity.Role;
+import hufs.ces.rcube.domain.member.repository.MemberRepository;
+import hufs.ces.rcube.domain.oauth.domain.OauthProvider;
 import hufs.ces.rcube.domain.oauth.dto.LoginResponse;
 import hufs.ces.rcube.domain.oauth.dto.OauthTokenResponse;
 import hufs.ces.rcube.domain.oauth.dto.UserProfile;
-import hufs.ces.rcube.domain.oauth.domain.OauthProvider;
 import hufs.ces.rcube.domain.oauth.repository.InMemoryProviderRepository;
-import hufs.ces.rcube.domain.oauth.service.OauthService;
 import hufs.ces.rcube.domain.oauth.security.JwtTokenProvider;
-import hufs.ces.rcube.domain.member.repository.MemberRepository;
+import hufs.ces.rcube.domain.oauth.service.OauthService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.*;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import java.net.URI;
 import java.util.Optional;
 
 import static hufs.ces.rcube.domain.member.entity.Role.USER;
@@ -24,11 +27,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class) //junit과 mockito연동
+@ExtendWith(MockitoExtension.class)
 public class OauthServiceTest {
 
-    @InjectMocks //인스터스 생성및 필드 주입
+    @InjectMocks
     private OauthService oauthService;
+
 
     @Mock
     private InMemoryProviderRepository providerRepository;
@@ -43,14 +47,21 @@ public class OauthServiceTest {
     private WebClient webClient;
 
     @Mock
-    private WebClient.Builder webClientBuilder; //웹 클라이언트 빌더를 통해 웹클라이언트 인스턴스 생성해줌
+    private WebClient.RequestBodyUriSpec requestBodyUriSpecMock;
 
+    @Mock
+    private WebClient.RequestHeadersUriSpec<?> requestHeadersUriSpecMock;
+
+    @Mock
+    private WebClient.RequestHeadersSpec<?> requestHeadersSpecMock;
+
+    @Mock
+    private WebClient.ResponseSpec responseSpecMock;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        when(webClientBuilder.build()).thenReturn(webClient); //인스턴스 생성대신 모킹된 웹클라이언트(가짜 객체)를 생성하도록함
-    } //이를 통해 네트워크 호출 없이 테스트 수행 가능
+    }
 
     @Test
     void testLogin() {
@@ -65,17 +76,20 @@ public class OauthServiceTest {
                 .userInfoUrl("userInfoUrl")
                 .redirectUrl("redirectUrl")
                 .build();
+
         OauthTokenResponse tokenResponse = OauthTokenResponse.builder()
                 .accessToken("accessToken")
                 .scope("scope")
                 .tokenType("tokenType")
                 .build();
+
         UserProfile userProfile = UserProfile.builder()
                 .oauthId("oauthId")
                 .email("email")
                 .name("name")
                 .imageUrl("imageUrl")
                 .build();
+
         Member member = Member.builder()
                 .id(1L)
                 .oauthId("oauthId")
@@ -84,19 +98,26 @@ public class OauthServiceTest {
                 .imageUrl("imageUrl")
                 .role(USER)
                 .build();
-        //특정메서드 호출 시 특정 값을 반환하도록 설정, 실제 로직을 호출하지 않고도 테스트할 수 있음.
 
+        // Mocking behavior
         when(providerRepository.findByProviderName(providerName)).thenReturn(provider);
-        when(oauthService.getToken(code, provider)).thenReturn(tokenResponse);
+        when(webClient.post()).thenReturn(requestBodyUriSpecMock);
+        when(requestBodyUriSpecMock.uri(any(URI.class))).thenReturn(requestBodyUriSpecMock);
+        when(requestBodyUriSpecMock.headers(any())).thenReturn(requestBodyUriSpecMock);
+        when(requestBodyUriSpecMock.retrieve()).thenReturn(responseSpecMock); // retrieve() 부분 수정
+        when(responseSpecMock.bodyToMono(OauthTokenResponse.class)).thenReturn(Mono.just(tokenResponse));
+
+        // Mocking getUserProfile 호출
         when(oauthService.getUserProfile(providerName, tokenResponse, provider)).thenReturn(userProfile);
-        when(memberRepository.findByOauthId(userProfile.getOauthId())).thenReturn(Optional.of(member)); //없으면 empty반환
+
+        when(memberRepository.findByOauthId(userProfile.getOauthId())).thenReturn(Optional.of(member));
         when(jwtTokenProvider.createAccessToken(String.valueOf(member.getId()))).thenReturn("jwtAccessToken");
         when(jwtTokenProvider.createRefreshToken()).thenReturn("jwtRefreshToken");
 
         // when
         LoginResponse response = oauthService.login(providerName, code);
 
-
+        // then
         assertEquals(member.getId(), response.getId());
         assertEquals(member.getName(), response.getName());
         assertEquals(member.getEmail(), response.getEmail());
@@ -105,6 +126,5 @@ public class OauthServiceTest {
         assertEquals("Bearer", response.getTokenType());
         assertEquals("jwtAccessToken", response.getAccessToken());
         assertEquals("jwtRefreshToken", response.getRefreshToken());
-
     }
 }
