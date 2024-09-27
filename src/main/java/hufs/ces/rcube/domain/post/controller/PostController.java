@@ -1,5 +1,6 @@
 package hufs.ces.rcube.domain.post.controller;
 
+import hufs.ces.rcube.domain.post.dto.MainPageDto;
 import hufs.ces.rcube.domain.post.dto.PostRequestDto;
 import hufs.ces.rcube.domain.post.dto.PostResponseDto;
 import hufs.ces.rcube.domain.post.service.PostService;
@@ -16,7 +17,13 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("api/posts")
 @RequiredArgsConstructor
 public class PostController {
+
     private final PostService postService;
+    // 메인 페이지 데이터 API
+    @GetMapping("/main")
+    public MainPageDto getMainPageData() {
+        return postService.getMainPageData();
+    }
 
     // 게시글 생성
     @PostMapping

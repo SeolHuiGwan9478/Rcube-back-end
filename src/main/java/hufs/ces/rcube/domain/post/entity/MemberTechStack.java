@@ -9,7 +9,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class MemberTeckStack {
+public class MemberTechStack {
     @Id@GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -18,8 +18,8 @@ public class MemberTeckStack {
     private Member member;
 
     @ManyToOne
-    @JoinColumn(name = "TECKSTACK_ID")
-    private TeckStack teckStack;
+    @JoinColumn(name = "TECHSTACK_ID")
+    private TechStack techStack;
 
 
 }

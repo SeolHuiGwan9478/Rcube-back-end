@@ -37,7 +37,7 @@ public class Post {
     private Event event;
 
     @OneToMany(mappedBy = "post")
-    private List<PostTeckStack> postTeckStacks = new ArrayList<>();
+    private List<TechStack> techStacks = new ArrayList<>();
 
     @OneToMany(mappedBy = "post")
     private List<Curriculum> curriculumList = new ArrayList<>();

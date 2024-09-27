@@ -8,7 +8,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class PostTeckStack {
+public class PostTechStack {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -18,6 +18,6 @@ public class PostTeckStack {
     private Post post;
 
     @ManyToOne
-    @JoinColumn(name = "TECKSTACK_ID")
-    private TeckStack teckStack;
+    @JoinColumn(name = "TECHSTACK_ID")
+    private TechStack techStack;
 }

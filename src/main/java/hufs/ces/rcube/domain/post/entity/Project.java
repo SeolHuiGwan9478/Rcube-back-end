@@ -22,10 +22,14 @@ public class Project {
     private Long id;
     private String name;
     private String description;
+    private int year; //프로젝트 연도
     @CreatedDate
     private LocalDate createdAt;
     @LastModifiedDate
     private LocalDate updatedAt;
+    private String imageUrl;
+    private String projectLink;
+
 
 
     @OneToMany(mappedBy = "project")
@@ -36,7 +40,7 @@ public class Project {
     private List<Event> events = new ArrayList<>(); // 프로젝트는 여러 이벤트를 가짐
 
     @OneToMany(mappedBy = "project")
-    private List<ProjectTechStack> projectTeckStacks = new ArrayList<>();
+    private List<ProjectTechStack> projectTechStacks = new ArrayList<>();
 
 
 }

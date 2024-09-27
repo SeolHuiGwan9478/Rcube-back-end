@@ -11,19 +11,19 @@ import java.util.List;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class TeckStack {
+public class TechStack {
     @Id@GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name; //기술 스택 이름
 
-    @OneToMany(mappedBy = "teckStack")
-    private List<ProjectTechStack> projectTeckStacks = new ArrayList<>();
+    @OneToMany(mappedBy = "techStack")
+    private List<ProjectTechStack> projectTechStacks = new ArrayList<>();
 
-    @OneToMany(mappedBy = "teckStack")
-    private List<MemberTeckStack> memberTeckStacks = new ArrayList<>();
+    @OneToMany(mappedBy = "techStack")
+    private List<MemberTechStack> memberTechStacks = new ArrayList<>();
 
-    @OneToMany(mappedBy = "teckStack")
-    private List<PostTeckStack> postTeckStacks = new ArrayList<>();
+    @OneToMany(mappedBy = "techStack")
+    private List<PostTechStack> postTechStacks = new ArrayList<>();
 
 }

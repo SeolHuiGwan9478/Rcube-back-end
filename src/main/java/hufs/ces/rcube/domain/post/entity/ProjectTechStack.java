@@ -18,7 +18,7 @@ public class ProjectTechStack {
 
     @ManyToOne
     @JoinColumn(name = "TECHSTACK_ID")
-    private TeckStack teckStack;
+    private TechStack techStack;
 
 
 

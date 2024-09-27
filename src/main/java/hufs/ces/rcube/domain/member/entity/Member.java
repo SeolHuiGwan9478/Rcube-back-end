@@ -2,7 +2,7 @@ package hufs.ces.rcube.domain.member.entity;
 
 import hufs.ces.rcube.domain.post.entity.MemberEvent;
 import hufs.ces.rcube.domain.post.entity.MemberProject;
-import hufs.ces.rcube.domain.post.entity.MemberTeckStack;
+import hufs.ces.rcube.domain.post.entity.MemberTechStack;
 import hufs.ces.rcube.domain.post.entity.Post;
 import jakarta.persistence.*;
 import lombok.*;
@@ -47,7 +47,7 @@ public class Member {
     private List<Post> posts = new ArrayList<>();
 
     @OneToMany(mappedBy = "member")
-    private  List<MemberTeckStack> memberTeckStacks = new ArrayList<>();
+    private  List<MemberTechStack> memberTechStacks = new ArrayList<>();
 
     public Member(String oauthId, String name, String email, String imageUrl, Role role) {
         this(null, oauthId, name, email, imageUrl, role);

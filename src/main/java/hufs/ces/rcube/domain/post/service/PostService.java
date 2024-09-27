@@ -2,11 +2,10 @@ package hufs.ces.rcube.domain.post.service;
 
 import hufs.ces.rcube.domain.member.entity.Member;
 import hufs.ces.rcube.domain.member.repository.MemberRepository;
+import hufs.ces.rcube.domain.post.dto.MainPageDto;
 import hufs.ces.rcube.domain.post.dto.PostRequestDto;
 import hufs.ces.rcube.domain.post.dto.PostResponseDto;
-import hufs.ces.rcube.domain.post.entity.Event;
-import hufs.ces.rcube.domain.post.entity.Post;
-import hufs.ces.rcube.domain.post.entity.Project;
+import hufs.ces.rcube.domain.post.entity.*;
 import hufs.ces.rcube.domain.post.repository.EventRepository;
 import hufs.ces.rcube.domain.post.repository.PostRepository;
 import hufs.ces.rcube.domain.post.repository.ProjectRepository;
@@ -20,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.*;
 
 
 @Service
@@ -29,6 +29,43 @@ public class PostService {
     private final MemberRepository memberRepository;
     private final EventRepository eventRepository;
     private final ProjectRepository projectRepository;
+
+    public MainPageDto getMainPageData() {
+        List<Post> posts = postRepository.findAll();
+        Map<String, List<Curriculum>> curriculumsByMonth = new HashMap<>();
+
+        // Set을 사용하여 중복된 프로젝트를 방지
+        Set<Project> uniqueProjects = new HashSet<>();
+
+        for (Post post : posts) {
+            // 포스트의 프로젝트가 null이 아닐 경우에만 추가
+            if (post.getProject() != null) {
+                uniqueProjects.add(post.getProject());
+            }
+
+            // 커리큘럼을 달별로 그룹화
+            for (Curriculum curriculum : post.getCurriculumList()) {
+                curriculumsByMonth
+                        .computeIfAbsent(curriculum.getMonth(), k -> new ArrayList<>())
+                        .add(curriculum);
+            }
+        }
+
+        int totalProjects = uniqueProjects.size(); // 고유 프로젝트의 개수 세기
+        long totalMembers = memberRepository.count(); // 누적 학회원 수
+        long currentMembers = memberRepository.count(); // 현재 학회원 수
+
+        return MainPageDto.builder()
+                .totalProjects(totalProjects)
+                .curriculumsByMonth(curriculumsByMonth) // 달별 커리큘럼
+                .totalMembers(totalMembers)
+                .currentMembers(currentMembers)
+                .build();
+    }
+
+
+
+
 
     @Transactional
     public PostResponseDto savePost(PostRequestDto postRequestDto) { // create
@@ -43,6 +80,9 @@ public class PostService {
         Project project = postRequestDto.getProjectId() != null
                 ? projectRepository.findById(postRequestDto.getProjectId()).orElse(null)
                 : null;
+        List<TechStack> techStacks = postRequestDto.getTechStack() != null
+                ? postRequestDto.getTechStack()
+                : new ArrayList<>(); // 혹은 null이 아닌 비어있는 리스트로 초기화
 
         Post post = Post.builder()
                 .title(postRequestDto.getTitle())
@@ -50,6 +90,7 @@ public class PostService {
                 .author(author)
                 .event(event)
                 .project(project)
+                .techStacks(techStacks)
                 .build();
 
         Post savedPost = postRepository.save(post);
