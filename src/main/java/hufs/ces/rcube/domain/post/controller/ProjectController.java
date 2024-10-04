@@ -1,10 +1,7 @@
 package hufs.ces.rcube.domain.post.controller;
 
-import hufs.ces.rcube.domain.post.dto.PostResponseDto;
 import hufs.ces.rcube.domain.post.dto.ProjectResponseDto;
-import hufs.ces.rcube.domain.post.entity.Project;
 import hufs.ces.rcube.domain.post.service.ProjectService;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

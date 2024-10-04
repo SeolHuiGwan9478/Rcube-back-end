@@ -18,9 +18,6 @@ public class Curriculum {
     private String title; // 커리큘럼 제목
     private String description; // 커리큘럼 설명
 
-    @ManyToOne
-    @JoinColumn(name = "POST_ID")
-    private Post post;
 
 
 

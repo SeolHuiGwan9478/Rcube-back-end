@@ -2,13 +2,11 @@ package hufs.ces.rcube.domain.post.service;
 
 import hufs.ces.rcube.domain.member.entity.Member;
 import hufs.ces.rcube.domain.member.repository.MemberRepository;
-import hufs.ces.rcube.domain.post.dto.PostRequestDto;
-import hufs.ces.rcube.domain.post.dto.PostResponseDto;
+import hufs.ces.rcube.domain.post.dto.EventRequestDto;
+import hufs.ces.rcube.domain.post.dto.EventResponseDto;
 import hufs.ces.rcube.domain.post.entity.Event;
-import hufs.ces.rcube.domain.post.entity.Post;
 import hufs.ces.rcube.domain.post.entity.Project;
 import hufs.ces.rcube.domain.post.repository.EventRepository;
-import hufs.ces.rcube.domain.post.repository.PostRepository;
 import hufs.ces.rcube.domain.post.repository.ProjectRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -42,7 +40,7 @@ import static org.mockito.Mockito.*;
         private ProjectRepository projectRepository;
 
         @InjectMocks
-        private PostService postService;
+        private EventService eventService;
 
         @BeforeEach
         void setUp() {
@@ -55,7 +53,7 @@ import static org.mockito.Mockito.*;
             Member member = Member.builder().name("author").build();
             when(memberRepository.findByAuthorName("author")).thenReturn(member);
 
-            PostRequestDto postRequestDto = PostRequestDto.builder()
+            EventRequestDto eventRequestDto = EventRequestDto.builder()
                     .title("Title")
                     .content("Content")
                     .author("author")
@@ -72,7 +70,7 @@ import static org.mockito.Mockito.*;
             when(postRepository.save(any(Post.class))).thenReturn(savedPost);
 
             // When
-            PostResponseDto response = postService.savePost(postRequestDto);
+            EventResponseDto response = eventService.savePost(eventRequestDto);
 
             // Then
             assertThat(response).isNotNull();
@@ -97,7 +95,7 @@ import static org.mockito.Mockito.*;
             when(postRepository.findById(1L)).thenReturn(Optional.of(post));
 
             // When
-            PostResponseDto response = postService.getPostById(1L);
+            EventResponseDto response = eventService.getPostById(1L);
 
             // Then
             assertThat(response).isNotNull();
@@ -120,7 +118,7 @@ import static org.mockito.Mockito.*;
             when(postRepository.findByTitle("Title")).thenReturn(Optional.of(post));
 
             // When
-            PostResponseDto response = postService.getPostByTitle("Title");
+            EventResponseDto response = eventService.getPostByTitle("Title");
 
             // Then
             assertThat(response).isNotNull();
@@ -144,7 +142,7 @@ import static org.mockito.Mockito.*;
             when(postRepository.findByAuthor(eq("author"), any(Pageable.class))).thenReturn(postPage);
 
             // When
-            Page<PostResponseDto> responsePage = postService.getPostsByAuthor("author", 0, 10, "createdAt");
+            Page<EventResponseDto> responsePage = eventService.getPostsByAuthor("author", 0, 10, "createdAt");
 
             // Then
             assertThat(responsePage).isNotNull();
@@ -172,7 +170,7 @@ import static org.mockito.Mockito.*;
             when(postRepository.findByEvent(eq(event), any(Pageable.class))).thenReturn(postPage);
 
             // When
-            Page<PostResponseDto> responsePage = postService.getPostsByEvent(1L, PageRequest.of(0, 10));
+            Page<EventResponseDto> responsePage = eventService.getPostsByEvent(1L, PageRequest.of(0, 10));
 
             // Then
             assertThat(responsePage).isNotNull();
@@ -200,7 +198,7 @@ import static org.mockito.Mockito.*;
             when(postRepository.findByProject(eq(project), any(Pageable.class))).thenReturn(postPage);
 
             // When
-            Page<PostResponseDto> responsePage = postService.getPostsByProject(1L, PageRequest.of(0, 10));
+            Page<EventResponseDto> responsePage = eventService.getPostsByProject(1L, PageRequest.of(0, 10));
 
             // Then
             assertThat(responsePage).isNotNull();
@@ -221,7 +219,7 @@ import static org.mockito.Mockito.*;
                     .createdAt(LocalDate.now())
                     .build();
 
-            PostRequestDto postRequestDto = PostRequestDto.builder()
+            EventRequestDto eventRequestDto = EventRequestDto.builder()
                     .title("Updated Title")
                     .content("Updated Content")
                     .author("author")
@@ -241,7 +239,7 @@ import static org.mockito.Mockito.*;
             when(postRepository.save(any(Post.class))).thenReturn(updatedPost);
 
             // When
-            PostResponseDto response = postService.updatePost(1L, postRequestDto);
+            EventResponseDto response = eventService.updatePost(1L, eventRequestDto);
 
             // Then
             assertThat(response).isNotNull();
@@ -257,7 +255,7 @@ import static org.mockito.Mockito.*;
             when(postRepository.existsById(1L)).thenReturn(true);
 
             // When
-            postService.deletePostById(1L);
+            eventService.deletePostById(1L);
 
             // Then
             verify(postRepository, times(1)).deleteById(1L);
@@ -267,13 +265,13 @@ import static org.mockito.Mockito.*;
         @Test
         void deleteByAuthorName() {
             // Given
-            PostRequestDto postRequestDto = PostRequestDto.builder()
+            EventRequestDto eventRequestDto = EventRequestDto.builder()
                     .author("author")
                     .build();
             when(memberRepository.findByAuthorName("author")).thenReturn(Member.builder().name("author").build());
 
             // When
-            postService.deleteByAuthorName(postRequestDto);
+            eventService.deleteByAuthorName(eventRequestDto);
 
             // Then
             verify(postRepository, times(1)).deleteByAuthorName("author");
@@ -294,14 +292,14 @@ import static org.mockito.Mockito.*;
             when(postRepository.findAll(any(Pageable.class))).thenReturn(postPage);
 
             // When
-            Page<PostResponseDto> responsePage = postService.getPosts(PageRequest.of(0, 10));
+            Page<EventResponseDto> responsePage = eventService.getPosts(PageRequest.of(0, 10));
 
             // Then
             assertThat(responsePage).isNotNull();
             assertThat(responsePage.getContent()).hasSize(1);
             assertThat(responsePage.getContent().get(0).getData().getTitle()).isEqualTo("Title");
             assertThat(responsePage.getContent().get(0).getMessage()).isEqualTo("Post retrieved successfully");
-            PostResponseDto responseDto = responsePage.getContent().get(0);
+            EventResponseDto responseDto = responsePage.getContent().get(0);
             assertThat(responseDto.getData().getId()).isEqualTo(1L);
             assertThat(responseDto.getData().getTitle()).isEqualTo("Title");
             assertThat(responseDto.getData().getContent()).isEqualTo("Content");

@@ -20,7 +20,6 @@ public class ProjectResponseDto {
         private String name;
         private String description;
         private int year; // 프로젝트 연도
-        private List<String> techStackNames; // 기술 스택 이름 리스트
         private String imageUrl;
         private String projectLink;
     }
@@ -33,9 +32,6 @@ public class ProjectResponseDto {
                         .name(project.getName())
                         .description(project.getDescription())
                         .year(project.getYear())
-                        .techStackNames(project.getProjectTechStacks().stream()
-                                .map(projectTechStack -> projectTechStack.getTechStack().getName()) // ProjectTechStack에서 TechStack 이름 추출
-                                .collect(Collectors.toList()))
                         .imageUrl(project.getImageUrl())
                         .projectLink(project.getProjectLink())
                         .build())

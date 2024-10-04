@@ -1,9 +1,6 @@
 package hufs.ces.rcube.domain.member.entity;
 
-import hufs.ces.rcube.domain.post.entity.MemberEvent;
 import hufs.ces.rcube.domain.post.entity.MemberProject;
-import hufs.ces.rcube.domain.post.entity.MemberTechStack;
-import hufs.ces.rcube.domain.post.entity.Post;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -38,20 +35,9 @@ public class Member {
 
     @OneToMany(mappedBy = "member")
     private List<MemberProject> memberProjects = new ArrayList<>();
-
-    @OneToMany(mappedBy = "member")
-    private List<MemberEvent> memberEvents = new ArrayList<>(); //이벤트에 참여한 사람들
-
-
-    @OneToMany(mappedBy = "author")
-    private List<Post> posts = new ArrayList<>();
-
-    @OneToMany(mappedBy = "member")
-    private  List<MemberTechStack> memberTechStacks = new ArrayList<>();
-
-    public Member(String oauthId, String name, String email, String imageUrl, Role role) {
-        this(null, oauthId, name, email, imageUrl, role);
-    }
+//    public Member(String oauthId, String name, String email, String imageUrl, Role role) {
+//        this(null, oauthId, name, email, imageUrl, role);
+//    }
 
     public Member(Long id, String oauthId, String name, String email, String imageUrl, Role role) {
         this.id = id;

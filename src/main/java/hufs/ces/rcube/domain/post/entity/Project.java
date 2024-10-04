@@ -39,8 +39,5 @@ public class Project {
     @OneToMany(mappedBy = "project")
     private List<Event> events = new ArrayList<>(); // 프로젝트는 여러 이벤트를 가짐
 
-    @OneToMany(mappedBy = "project")
-    private List<ProjectTechStack> projectTechStacks = new ArrayList<>();
-
 
 }
