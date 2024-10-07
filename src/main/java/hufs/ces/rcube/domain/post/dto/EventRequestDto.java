@@ -1,7 +1,7 @@
 package hufs.ces.rcube.domain.post.dto;
 import lombok.*;
 
-@Data
+
 @Getter
 @Builder
 @NoArgsConstructor

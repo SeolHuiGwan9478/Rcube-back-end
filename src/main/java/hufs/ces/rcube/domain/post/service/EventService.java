@@ -16,7 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-
+import java.util.List;
 
 
 @Service
@@ -32,7 +32,7 @@ public class EventService {
 
 
     @Transactional
-    public EventResponseDto savePost(EventRequestDto eventRequestDto) { // create
+    public EventResponseDto saveEvent(EventRequestDto eventRequestDto) { // create
         Member author = memberRepository.findByAuthorName(eventRequestDto.getAuthor());
         if (author == null) {
             throw new IllegalArgumentException("Author not found");
@@ -47,27 +47,27 @@ public class EventService {
         return  EventResponseDto.convertToEventResponseDto(savedPost, "Post created successfully", HttpStatus.CREATED);
     }
 
-    public EventResponseDto getPostById(Long id) {
+    public EventResponseDto getEventById(Long id) {
         Event post = eventRepository.findById(id).orElseThrow(() ->
                 new IllegalArgumentException("Post not found with id: " + id));
         return  EventResponseDto.convertToEventResponseDto(post, "Post retrieved successfully", HttpStatus.OK);
     }
 
-    public EventResponseDto getPostByTitle(String title) {
+    public EventResponseDto getEventByTitle(String title) {
         Event post = eventRepository.findByTitle(title).orElseThrow(() ->
                 new IllegalArgumentException("Post not found with title: " + title));
         return  EventResponseDto.convertToEventResponseDto(post, "Post retrieved successfully", HttpStatus.OK);
     }
 
-    public Page<EventResponseDto> getPostsByAuthor(String authorName, int page, int size, String sortBy) {
+    public Page<EventResponseDto> getEventsByAuthor(String authorName, int page, int size, String sortBy) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, sortBy));
         Page<Event> postPage = eventRepository.findByAuthor(authorName, pageable);
-        return postPage.map(post ->  EventResponseDto.convertToEventResponseDto(post, "Post retrieved successfully", HttpStatus.OK));
+        return postPage.map(post ->  EventResponseDto.convertToEventsResponseDto(List.of(post), "Post retrieved successfully", HttpStatus.OK));
     }
 
 
     @Transactional
-    public EventResponseDto updatePost(Long id, EventRequestDto eventRequestDto) {
+    public EventResponseDto updateEvent(Long id, EventRequestDto eventRequestDto) {
         Event existingPost = eventRepository.findById(id).orElseThrow(() ->
                 new IllegalArgumentException("Post not found with id: " + id));
 
@@ -91,7 +91,7 @@ public class EventService {
     }
 
     @Transactional
-    public void deletePostById(Long id) {
+    public void deleteEventById(Long id) {
         if (!eventRepository.existsById(id)) {
             throw new IllegalArgumentException("Post not found with id: " + id);
         }
@@ -100,7 +100,7 @@ public class EventService {
 
 
     @Transactional
-    public void deleteByAuthorName(EventRequestDto eventRequestDto) {
+    public void deleteEventByAuthorName(EventRequestDto eventRequestDto) {
         String authorname = eventRequestDto.getAuthor();
         Member author = memberRepository.findByAuthorName(authorname);
 

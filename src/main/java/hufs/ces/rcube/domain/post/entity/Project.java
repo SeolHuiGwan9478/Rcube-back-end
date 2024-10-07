@@ -20,7 +20,7 @@ public class Project {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
+    private String projectName;
     private String description;
     private int year; //프로젝트 연도
     @CreatedDate
@@ -36,8 +36,7 @@ public class Project {
     private List<MemberProject> memberProjects = new ArrayList<>();
 
 
-    @OneToMany(mappedBy = "project")
-    private List<Event> events = new ArrayList<>(); // 프로젝트는 여러 이벤트를 가짐
+
 
 
 }

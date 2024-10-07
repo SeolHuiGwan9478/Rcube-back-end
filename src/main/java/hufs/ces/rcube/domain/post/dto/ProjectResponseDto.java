@@ -17,19 +17,37 @@ public class ProjectResponseDto {
     @Builder
     public static class ProjectData {
         private Long id;
-        private String name;
+        private String author;
+        private String projectName;
         private String description;
         private int year; // 프로젝트 연도
         private String imageUrl;
         private String projectLink;
     }
 
-    // 여러 개의 Project를 변환하는 메서드
-    public static ProjectResponseDto convertToProjectResponseDto(List<Project> projects, String message, HttpStatus status) {
-        List<ProjectData> projectDataList = projects.stream()
-                .map(project -> ProjectResponseDto.ProjectData.builder()
+    //Project를 변환하는 메서드
+    public static ProjectResponseDto convertToProjectResponseDto(Project project, String message, HttpStatus status) {
+        ProjectData projectData = ProjectData.builder()
                         .id(project.getId())
-                        .name(project.getName())
+                        .projectName(project.getProjectName())
+                        .description(project.getDescription())
+                        .year(project.getYear())
+                        .imageUrl(project.getImageUrl())
+                        .projectLink(project.getProjectLink())
+                        .build();
+
+
+        return ProjectResponseDto.builder()
+                .message(message)
+                .data(List.of(projectData))
+                .build();
+    }
+    // 다중 Project를 변환하는 메서드
+    public static ProjectResponseDto convertToProjectsResponseDto(List<Project> projects, String message, HttpStatus status) {
+        List<ProjectData> projectDataList = projects.stream()
+                .map(project -> ProjectData.builder()
+                        .id(project.getId())
+                        .projectName(project.getProjectName())
                         .description(project.getDescription())
                         .year(project.getYear())
                         .imageUrl(project.getImageUrl())
@@ -39,7 +57,8 @@ public class ProjectResponseDto {
 
         return ProjectResponseDto.builder()
                 .message(message)
-                .data(projectDataList)
+                .data(projectDataList) // 리스트 데이터를 설정
                 .build();
     }
 }
+

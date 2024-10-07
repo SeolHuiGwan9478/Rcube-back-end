@@ -8,9 +8,6 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 
 @Entity
@@ -32,7 +29,7 @@ public class Event {
 
 
     @ManyToOne
-    @JoinColumn(name = "MEMBER_ID")
+    @JoinColumn(name = "MEMBER_ID")// MEMBER_ID를 외래 키로 사용
     private Member author; //이벤트에 관한 게시글을 쓴 작성자
 
 
