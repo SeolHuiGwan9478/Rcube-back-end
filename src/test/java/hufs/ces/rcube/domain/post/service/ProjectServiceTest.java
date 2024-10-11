@@ -41,7 +41,8 @@ public class ProjectServiceTest {
     void saveProject() {
         // Given
         Member member = Member.builder().name("author").build();
-        when(memberRepository.findByAuthorName("author")).thenReturn(member);
+        // Mocking the findByAuthorName to return a valid member
+        when(memberRepository.findByAuthorName("author")).thenReturn(member); // 수정된 부분
 
         ProjectRequestDto projectRequestDto = ProjectRequestDto.builder()
                 .projectName("Project Name")
@@ -74,7 +75,7 @@ public class ProjectServiceTest {
         ProjectResponseDto.ProjectData projectData = response.getData().get(0); // Access first element
         assertThat(projectData.getProjectName()).isEqualTo("Project Name");
         assertThat(projectData.getDescription()).isEqualTo("Project Description");
-        assertThat(projectData.getAuthor()).isEqualTo("author");
+        assertThat(projectData.getAuthor()).isEqualTo("author"); // 검증할 때도 맞는 값이 들어가는지 확인
         assertThat(response.getMessage()).isEqualTo("Post created successfully");
     }
 
@@ -126,6 +127,7 @@ public class ProjectServiceTest {
 
     @Test
     void updateProject() {
+        Member member = Member.builder().name("author").build();
         // Given
         Project existingProject = Project.builder()
                 .id(1L)
@@ -156,7 +158,7 @@ public class ProjectServiceTest {
 
         // Mock repository behavior
         when(projectRepository.findById(1L)).thenReturn(Optional.of(existingProject));
-        when(memberRepository.findByAuthorName("author")).thenReturn(existingProject.getAuthor());
+        when(memberRepository.findByAuthorName("author")).thenReturn(member); // 수정된 부분
         when(projectRepository.save(any(Project.class))).thenReturn(updatedProject);
 
         // When
