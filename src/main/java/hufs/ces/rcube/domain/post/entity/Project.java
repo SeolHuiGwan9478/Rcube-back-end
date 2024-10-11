@@ -1,5 +1,6 @@
 package hufs.ces.rcube.domain.post.entity;
 
+import hufs.ces.rcube.domain.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -29,6 +30,10 @@ public class Project {
     private LocalDate updatedAt;
     private String imageUrl;
     private String projectLink;
+
+    @ManyToOne
+    @JoinColumn(name = "MEMBER_ID")// MEMBER_ID를 외래 키로 사용
+    private Member author; //이벤트에 관한 게시글을 쓴 작성자
 
 
 

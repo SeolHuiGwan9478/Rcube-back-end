@@ -35,6 +35,7 @@ public class ProjectService {
                 .year(projectRequestDto.getYear())
                 .imageUrl(projectRequestDto.getImageUrl())
                 .projectLink(projectRequestDto.getProjectLink())
+                .author(author)
                 .build();
         Project savedPost = projectRepository.save(post);
         return  ProjectResponseDto.convertToProjectResponseDto(savedPost, "Post created successfully", HttpStatus.CREATED);
@@ -79,6 +80,7 @@ public class ProjectService {
             .year(projectRequestDto.getYear())
             .imageUrl(projectRequestDto.getImageUrl())
             .projectLink(projectRequestDto.getProjectLink())
+            .author(author)
             .build();
         Project savedPost = projectRepository.save(updatePost);
         return ProjectResponseDto.convertToProjectResponseDto(savedPost, "Post updated successfully", HttpStatus.OK);
