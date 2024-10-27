@@ -44,7 +44,7 @@ public class EventServiceTest {
     void saveEvent() {
         // Given
         Member member = Member.builder().name("author").build();
-        when(memberRepository.findByAuthorName("author")).thenReturn(member);
+        when(memberRepository.findByName("author")).thenReturn(member);
 
         EventRequestDto eventRequestDto = EventRequestDto.builder()
                 .title("Title")
@@ -173,7 +173,7 @@ public class EventServiceTest {
                 .build();
 
         when(eventRepository.findById(1L)).thenReturn(Optional.of(existingPost));
-        when(memberRepository.findByAuthorName("author")).thenReturn(Member.builder().name("author").build());
+        when(memberRepository.findByName("author")).thenReturn(Member.builder().name("author").build());
         when(eventRepository.save(any(Event.class))).thenReturn(updatedPost);
 
         // When
@@ -205,7 +205,7 @@ public class EventServiceTest {
         EventRequestDto eventRequestDto = EventRequestDto.builder()
                 .author("author")
                 .build();
-        when(memberRepository.findByAuthorName("author")).thenReturn(Member.builder().name("author").build());
+        when(memberRepository.findByName("author")).thenReturn(Member.builder().name("author").build());
 
         // When
         eventService.deleteEventByAuthorName(eventRequestDto);

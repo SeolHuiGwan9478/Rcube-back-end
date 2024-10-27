@@ -1,5 +1,6 @@
 package hufs.ces.rcube.domain.member.entity;
 
+import hufs.ces.rcube.domain.post.entity.Event;
 import hufs.ces.rcube.domain.post.entity.MemberProject;
 import jakarta.persistence.*;
 import lombok.*;
@@ -38,6 +39,8 @@ public class Member {
 //    public Member(String oauthId, String name, String email, String imageUrl, Role role) {
 //        this(null, oauthId, name, email, imageUrl, role);
 //    }
+
+
 
     public Member(Long id, String oauthId, String name, String email, String imageUrl, Role role) {
         this.id = id;

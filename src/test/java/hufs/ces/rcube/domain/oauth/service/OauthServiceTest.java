@@ -8,7 +8,6 @@ import hufs.ces.rcube.domain.oauth.dto.OauthTokenResponse;
 import hufs.ces.rcube.domain.oauth.dto.UserProfile;
 import hufs.ces.rcube.domain.oauth.repository.InMemoryProviderRepository;
 import hufs.ces.rcube.domain.oauth.security.JwtTokenProvider;
-import hufs.ces.rcube.domain.oauth.service.OauthService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

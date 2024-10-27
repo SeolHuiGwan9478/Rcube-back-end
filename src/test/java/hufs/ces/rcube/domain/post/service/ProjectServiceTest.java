@@ -39,10 +39,9 @@ public class ProjectServiceTest {
 
     @Test
     void saveProject() {
-        // Given
+
         Member member = Member.builder().name("author").build();
-        // Mocking the findByAuthorName to return a valid member
-        when(memberRepository.findByAuthorName("author")).thenReturn(member); // 수정된 부분
+        when(memberRepository.findByName("author")).thenReturn(member);
 
         ProjectRequestDto projectRequestDto = ProjectRequestDto.builder()
                 .projectName("Project Name")
@@ -57,14 +56,13 @@ public class ProjectServiceTest {
                 .id(1L)
                 .projectName("Project Name")
                 .description("Project Description")
-                .author(member) // Use the correct member object
+                .author(member)
                 .year(2024)
                 .imageUrl("https://example.com/image.png")
                 .projectLink("https://example.com/project")
                 .createdAt(LocalDate.now())
                 .build();
 
-        // Mock the repository's save method
         when(projectRepository.save(any(Project.class))).thenReturn(savedProject);
 
         // When
@@ -72,10 +70,10 @@ public class ProjectServiceTest {
 
         // Then
         assertThat(response).isNotNull();
-        ProjectResponseDto.ProjectData projectData = response.getData().get(0); // Access first element
+        ProjectResponseDto.ProjectData projectData = response.getData().get(0);
         assertThat(projectData.getProjectName()).isEqualTo("Project Name");
         assertThat(projectData.getDescription()).isEqualTo("Project Description");
-        assertThat(projectData.getAuthor()).isEqualTo("author"); // 검증할 때도 맞는 값이 들어가는지 확인
+        assertThat(projectData.getAuthor()).isEqualTo("author");
         assertThat(response.getMessage()).isEqualTo("Post created successfully");
     }
 
@@ -97,7 +95,7 @@ public class ProjectServiceTest {
 
         // Then
         assertThat(response).isNotNull();
-        ProjectResponseDto.ProjectData projectData = response.getData().get(0); // Access first element
+        ProjectResponseDto.ProjectData projectData = response.getData().get(0);
         assertThat(projectData.getProjectName()).isEqualTo("Project Name");
         assertThat(response.getMessage()).isEqualTo("프로젝트 조회 성공");
     }
@@ -120,20 +118,20 @@ public class ProjectServiceTest {
 
         // Then
         assertThat(response).isNotNull();
-        ProjectResponseDto.ProjectData projectData = response.getData().get(0); // Access first element
+        ProjectResponseDto.ProjectData projectData = response.getData().get(0);
         assertThat(projectData.getProjectName()).isEqualTo("Project Name");
         assertThat(response.getMessage()).isEqualTo("2024년도의 프로젝트 조회 성공");
     }
 
     @Test
     void updateProject() {
-        Member member = Member.builder().name("author").build();
         // Given
+        Member member = Member.builder().name("author").build();
         Project existingProject = Project.builder()
                 .id(1L)
                 .projectName("Old Project Name")
                 .description("Old Project Description")
-                .author(Member.builder().name("author").build())
+                .author(member)
                 .year(2024)
                 .build();
 
@@ -156,9 +154,8 @@ public class ProjectServiceTest {
                 .projectLink("https://example.com/project")
                 .build();
 
-        // Mock repository behavior
         when(projectRepository.findById(1L)).thenReturn(Optional.of(existingProject));
-        when(memberRepository.findByAuthorName("author")).thenReturn(member); // 수정된 부분
+        when(memberRepository.findByName("author")).thenReturn(member);
         when(projectRepository.save(any(Project.class))).thenReturn(updatedProject);
 
         // When
@@ -166,7 +163,7 @@ public class ProjectServiceTest {
 
         // Then
         assertThat(response).isNotNull();
-        ProjectResponseDto.ProjectData projectData = response.getData().get(0); // Access first element
+        ProjectResponseDto.ProjectData projectData = response.getData().get(0);
         assertThat(projectData.getProjectName()).isEqualTo("Updated Project Name");
         assertThat(projectData.getDescription()).isEqualTo("Updated Project Description");
         assertThat(response.getMessage()).isEqualTo("Post updated successfully");

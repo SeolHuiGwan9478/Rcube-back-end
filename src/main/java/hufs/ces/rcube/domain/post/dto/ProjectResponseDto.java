@@ -34,6 +34,7 @@ public class ProjectResponseDto {
                         .year(project.getYear())
                         .imageUrl(project.getImageUrl())
                         .projectLink(project.getProjectLink())
+                        .author(project.getAuthor().getName())
                         .build();
 
 

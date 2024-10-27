@@ -25,7 +25,7 @@ public class ProjectService {
 
     @Transactional
     public ProjectResponseDto saveProject(ProjectRequestDto projectRequestDto){
-        Member author = memberRepository.findByAuthorName(projectRequestDto.getAuthor());
+        Member author = memberRepository.findByName(projectRequestDto.getAuthor());
         if (author == null) {
             throw new IllegalArgumentException("Author not found");
         }
@@ -68,8 +68,8 @@ public class ProjectService {
     @Transactional
     public ProjectResponseDto updateProject(Long id, ProjectRequestDto projectRequestDto){
         Project existingPost = projectRepository.findById(id).orElseThrow(() ->
-                new IllegalArgumentException("Post not found wwith id: " + id));
-        Member author = memberRepository.findByAuthorName(projectRequestDto.getAuthor());
+                new IllegalArgumentException("Post not found with id: " + id));
+        Member author = memberRepository.findByName(projectRequestDto.getAuthor());
         if (author == null) {
             throw new IllegalArgumentException("Author not found");
         }

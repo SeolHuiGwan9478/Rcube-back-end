@@ -55,7 +55,7 @@ public class EventController {
     }
 
     // 제목으로 게시글 조회
-    @GetMapping
+    @GetMapping("/title")
     public ResponseEntity<EventResponseDto> getPostByTitle(@RequestParam("title") String title) {
         try {
             EventResponseDto post = eventService.getEventByTitle(title);
@@ -66,7 +66,7 @@ public class EventController {
     }
 
     // 작성자 이름으로 게시글 페이징 조회
-    @GetMapping
+    @GetMapping("/author")
     public ResponseEntity<Page<EventResponseDto>> getPostsByAuthorPaged(
             @RequestParam("author") String authorName,
             @RequestParam(defaultValue = "0") int page,
@@ -76,7 +76,6 @@ public class EventController {
         Page<EventResponseDto> postPage = eventService.getEventsByAuthor(authorName, page, size, sortBy);
         return new ResponseEntity<>(postPage, HttpStatus.OK);
     }
-
 
     // 게시글 수정
     @PutMapping("/{id}")
@@ -100,8 +99,8 @@ public class EventController {
         }
     }
 
-
-    @DeleteMapping
+    // 작성자 이름으로 게시글 삭제
+    @DeleteMapping("/author")
     public ResponseEntity<Void> deletePostByAuthorName(@RequestBody EventRequestDto eventRequestDto) {
         try {
             eventService.deleteEventByAuthorName(eventRequestDto);

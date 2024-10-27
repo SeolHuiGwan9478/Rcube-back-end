@@ -33,7 +33,7 @@ public class EventService {
 
     @Transactional
     public EventResponseDto saveEvent(EventRequestDto eventRequestDto) { // create
-        Member author = memberRepository.findByAuthorName(eventRequestDto.getAuthor());
+        Member author = memberRepository.findByName(eventRequestDto.getAuthor());
         if (author == null) {
             throw new IllegalArgumentException("Author not found");
         }
@@ -71,7 +71,7 @@ public class EventService {
         Event existingPost = eventRepository.findById(id).orElseThrow(() ->
                 new IllegalArgumentException("Post not found with id: " + id));
 
-        Member author = memberRepository.findByAuthorName(eventRequestDto.getAuthor());
+        Member author = memberRepository.findByName(eventRequestDto.getAuthor());
         if (author == null) {
             throw new IllegalArgumentException("Author not found");
         }
@@ -102,7 +102,7 @@ public class EventService {
     @Transactional
     public void deleteEventByAuthorName(EventRequestDto eventRequestDto) {
         String authorname = eventRequestDto.getAuthor();
-        Member author = memberRepository.findByAuthorName(authorname);
+        Member author = memberRepository.findByName(authorname);
 
         if (author != null) {
             eventRepository.deleteByAuthorName(authorname);
