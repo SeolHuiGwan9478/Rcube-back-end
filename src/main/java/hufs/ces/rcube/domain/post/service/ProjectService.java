@@ -1,5 +1,7 @@
 package hufs.ces.rcube.domain.post.service;
 
+import hufs.ces.rcube.domain.execption.CommonErrorCode;
+import hufs.ces.rcube.domain.execption.RestApiException;
 import hufs.ces.rcube.domain.member.entity.Member;
 import hufs.ces.rcube.domain.member.repository.MemberRepository;
 
@@ -24,11 +26,17 @@ public class ProjectService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public ProjectResponseDto saveProject(ProjectRequestDto projectRequestDto){
+    public ProjectResponseDto saveProject(ProjectRequestDto projectRequestDto) {
+        // 예시: 특정 조건에서만 RestApiException을 던지는 경우
+        if (projectRepository.existsByProjectName(projectRequestDto.getProjectName())) {
+            throw new RestApiException(CommonErrorCode.DUPLICATE_PROJECT_NAME, "이미 존재하는 프로젝트 이름입니다.");
+        }
+
         Member author = memberRepository.findByName(projectRequestDto.getAuthor());
         if (author == null) {
             throw new IllegalArgumentException("Author not found");
         }
+
         Project post = Project.builder()
                 .projectName(projectRequestDto.getProjectName())
                 .description(projectRequestDto.getDescription())
@@ -37,12 +45,10 @@ public class ProjectService {
                 .projectLink(projectRequestDto.getProjectLink())
                 .author(author)
                 .build();
+
         Project savedPost = projectRepository.save(post);
-        return  ProjectResponseDto.convertToProjectResponseDto(savedPost, "Post created successfully", HttpStatus.CREATED);
-
-
-
-}
+        return ProjectResponseDto.convertToProjectResponseDto(savedPost, "Post created successfully", HttpStatus.CREATED);
+    }
 
     // 모든 프로젝트 조회
     public ProjectResponseDto getAllProjects() {

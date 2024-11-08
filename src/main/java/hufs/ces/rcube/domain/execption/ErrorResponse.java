@@ -11,7 +11,7 @@ import java.util.List;
 @Getter
 @Builder
 @RequiredArgsConstructor
-public class ErrorResponse {
+public class ErrorResponse { //예외 발생 시 클라이언트에게 전송할 응답 구조
 
     private final String code;
     private final String message;

@@ -1,13 +1,16 @@
-package hufs.ces.rcube.domain.execption;
+package hufs.ces.rcube.domain.exception;
 
+import hufs.ces.rcube.domain.execption.ErrorCode;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 
 @Getter
-@RequiredArgsConstructor
-public class RestApiException extends RuntimeException { //언체크예외를 상속받는 예외 클래스
+public class RestApiException extends RuntimeException {
+    private final ErrorCode errorCode;  // ErrorCode는 CommonErrorCode와 같은 에러 코드 인터페이스를 의미
 
-    private final ErrorCode errorCode;
-
+    // 생성자
+    public RestApiException(ErrorCode errorCode, String message) {
+        super(message);
+        this.errorCode = errorCode;
+    }
 }
-

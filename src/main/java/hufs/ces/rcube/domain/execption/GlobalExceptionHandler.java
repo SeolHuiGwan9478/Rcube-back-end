@@ -14,12 +14,21 @@ import java.util.concurrent.RejectedExecutionException;
 @Slf4j
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(RestApiException.class)
-    public ResponseEntity<Object> handleCustomException(RestApiException e) {
-        log.warn("Custom Exception Occurred: {}", e.getMessage(), e);
+    @ExceptionHandler(hufs.ces.rcube.domain.exception.RestApiException.class)
+    public ResponseEntity<ErrorResponse> handleRestApiException(hufs.ces.rcube.domain.exception.RestApiException e) {
+        log.warn("RestApiException occurred: {}", e.getMessage(), e);
+
+        // 예외로부터 ErrorCode와 메시지를 추출
         ErrorCode errorCode = e.getErrorCode();
-        return handleExceptionInternal(errorCode);
+        String errorMessage = e.getMessage();
+
+        // ErrorResponse 객체 생성
+        ErrorResponse response = new ErrorResponse(errorMessage, errorCode.getHttpStatus());
+
+        // ResponseEntity로 에러 리스폰스를 반환
+        return new ResponseEntity<>(response, errorCode.getHttpStatus());
     }
+
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Object> handleIllegalArgument(IllegalArgumentException e) {
