@@ -1,4 +1,4 @@
-package hufs.ces.rcube.domain.execption;
+package hufs.ces.rcube.domain.exception;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -7,26 +7,29 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.reactive.result.method.annotation.ResponseEntityExceptionHandler;
 import org.springframework.web.server.ResponseStatusException;
-
+import hufs.ces.rcube.domain.exception.RestApiException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.RejectedExecutionException;
 
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(hufs.ces.rcube.domain.exception.RestApiException.class)
-    public ResponseEntity<ErrorResponse> handleRestApiException(hufs.ces.rcube.domain.exception.RestApiException e) {
-        log.warn("RestApiException occurred: {}", e.getMessage(), e);
+    @ExceptionHandler(RestApiException.class)
+    public ResponseEntity<ErrorResponse> handleRestApiException(RestApiException e) {
+        log.warn("RestApiException 발생: {}", e.getMessage(), e);
 
-        // 예외로부터 ErrorCode와 메시지를 추출
-        ErrorCode errorCode = e.getErrorCode();
+        // ErrorCode를 문자열로 변환하고 빈 ValidationErrors 리스트 생성
+        String errorCode = e.getErrorCode().name();
         String errorMessage = e.getMessage();
+        List<ErrorResponse.ValidationError> validationErrors = new ArrayList<>();
 
-        // ErrorResponse 객체 생성
-        ErrorResponse response = new ErrorResponse(errorMessage, errorCode.getHttpStatus());
+        // ErrorResponse 생성자에 세 개의 매개변수를 전달
+        ErrorResponse response = new ErrorResponse(errorCode, errorMessage, validationErrors);
 
-        // ResponseEntity로 에러 리스폰스를 반환
-        return new ResponseEntity<>(response, errorCode.getHttpStatus());
+        // ResponseEntity로 에러 응답 반환
+        return new ResponseEntity<>(response, e.getErrorCode().getHttpStatus());
     }
 
 
@@ -42,13 +45,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         log.error("Null Pointer Exception: {}", e.getMessage(), e);
         ErrorCode errorCode = CommonErrorCode.INTERNAL_SERVER_ERROR;
         return handleExceptionInternal(errorCode, "Unexpected null value encountered.");
-    }
-
-    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    public ResponseEntity<Object> handleMethodNotAllowed(HttpRequestMethodNotSupportedException e) {
-        log.warn("Method Not Allowed Exception: {}", e.getMessage(), e);
-        ErrorCode errorCode = CommonErrorCode.METHOD_NOT_ALLOWED;
-        return handleExceptionInternal(errorCode, "HTTP method not supported for this request.");
     }
 
     @ExceptionHandler(ResponseStatusException.class)

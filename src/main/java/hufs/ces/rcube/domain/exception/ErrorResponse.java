@@ -1,4 +1,4 @@
-package hufs.ces.rcube.domain.execption;
+package hufs.ces.rcube.domain.exception;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;

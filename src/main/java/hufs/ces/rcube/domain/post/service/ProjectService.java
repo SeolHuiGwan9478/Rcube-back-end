@@ -1,7 +1,7 @@
 package hufs.ces.rcube.domain.post.service;
 
-import hufs.ces.rcube.domain.execption.CommonErrorCode;
-import hufs.ces.rcube.domain.execption.RestApiException;
+import hufs.ces.rcube.domain.exception.CommonErrorCode;
+import hufs.ces.rcube.domain.exception.RestApiException;
 import hufs.ces.rcube.domain.member.entity.Member;
 import hufs.ces.rcube.domain.member.repository.MemberRepository;
 

@@ -12,66 +12,44 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("api/projects")
 @RequiredArgsConstructor
 public class ProjectController {
+
     private final ProjectService projectService;
 
     @PostMapping
-    public ResponseEntity<ProjectResponseDto> createProject(@RequestBody ProjectRequestDto projectRequestDto){
-        try{
-            ProjectResponseDto createdProject = projectService.saveProject(projectRequestDto);
-            return new ResponseEntity<>(createdProject, HttpStatus.CREATED);
-    } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<ProjectResponseDto> createProject(@RequestBody ProjectRequestDto projectRequestDto) {
+        ProjectResponseDto createdProject = projectService.saveProject(projectRequestDto);
+        return new ResponseEntity<>(createdProject, HttpStatus.CREATED);
     }
 
     @GetMapping
-    public ResponseEntity<ProjectResponseDto> getAllProjects(){
-        try {
-            ProjectResponseDto project = projectService.getAllProjects();
-            return new ResponseEntity<>(project, HttpStatus.OK);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<ProjectResponseDto> getAllProjects() {
+        ProjectResponseDto project = projectService.getAllProjects();
+        return new ResponseEntity<>(project, HttpStatus.OK);
     }
+
     @GetMapping("/{id}")
     public ResponseEntity<ProjectResponseDto> getProjectById(@PathVariable Long id) {
-        try {
-            ProjectResponseDto project = projectService.getProjectById(id);
-            return new ResponseEntity<>(project, HttpStatus.OK);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        ProjectResponseDto project = projectService.getProjectById(id);
+        return new ResponseEntity<>(project, HttpStatus.OK);
     }
+
     @GetMapping("{year}")
-    public ResponseEntity<ProjectResponseDto> getProjectByYear(@PathVariable int year){
-        try {
-            ProjectResponseDto project = projectService.getProjectByYear(year);
-            return new ResponseEntity<>(project, HttpStatus.OK);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<ProjectResponseDto> getProjectByYear(@PathVariable int year) {
+        ProjectResponseDto project = projectService.getProjectByYear(year);
+        return new ResponseEntity<>(project, HttpStatus.OK);
     }
+
     // 게시글 수정
     @PutMapping("/{id}")
     public ResponseEntity<ProjectResponseDto> updateProject(@PathVariable Long id, @RequestBody ProjectRequestDto projectRequestDto) {
-        try {
-            ProjectResponseDto project = projectService.updateProject(id, projectRequestDto);
-            return new ResponseEntity<>(project, HttpStatus.OK);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        ProjectResponseDto project = projectService.updateProject(id, projectRequestDto);
+        return new ResponseEntity<>(project, HttpStatus.OK);
     }
 
     // ID로 게시글 삭제
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProjectById(@PathVariable Long id) {
-        try {
-            projectService.deleteProjectById(id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        projectService.deleteProjectById(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
-
 }

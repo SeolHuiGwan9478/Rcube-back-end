@@ -1,6 +1,5 @@
 package hufs.ces.rcube.domain.post.controller;
 
-
 import hufs.ces.rcube.domain.post.dto.EventRequestDto;
 import hufs.ces.rcube.domain.post.dto.EventResponseDto;
 import hufs.ces.rcube.domain.post.service.EventService;
@@ -23,12 +22,8 @@ public class EventController {
     // 게시글 생성
     @PostMapping
     public ResponseEntity<EventResponseDto> createPost(@RequestBody EventRequestDto eventRequestDto) {
-        try {
-            EventResponseDto createdPost = eventService.saveEvent(eventRequestDto);
-            return new ResponseEntity<>(createdPost, HttpStatus.CREATED);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+        EventResponseDto createdPost = eventService.saveEvent(eventRequestDto);
+        return new ResponseEntity<>(createdPost, HttpStatus.CREATED);
     }
 
     // 모든 게시글 조회
@@ -46,23 +41,15 @@ public class EventController {
     // ID로 게시글 조회
     @GetMapping("/{id}")
     public ResponseEntity<EventResponseDto> getPostById(@PathVariable Long id) {
-        try {
-            EventResponseDto post = eventService.getEventById(id);
-            return new ResponseEntity<>(post, HttpStatus.OK);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        EventResponseDto post = eventService.getEventById(id);
+        return new ResponseEntity<>(post, HttpStatus.OK);
     }
 
     // 제목으로 게시글 조회
     @GetMapping("/title")
     public ResponseEntity<EventResponseDto> getPostByTitle(@RequestParam("title") String title) {
-        try {
-            EventResponseDto post = eventService.getEventByTitle(title);
-            return new ResponseEntity<>(post, HttpStatus.OK);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        EventResponseDto post = eventService.getEventByTitle(title);
+        return new ResponseEntity<>(post, HttpStatus.OK);
     }
 
     // 작성자 이름으로 게시글 페이징 조회
@@ -80,33 +67,21 @@ public class EventController {
     // 게시글 수정
     @PutMapping("/{id}")
     public ResponseEntity<EventResponseDto> updatePost(@PathVariable Long id, @RequestBody EventRequestDto eventRequestDto) {
-        try {
-            EventResponseDto post = eventService.updateEvent(id, eventRequestDto);
-            return new ResponseEntity<>(post, HttpStatus.OK);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        EventResponseDto post = eventService.updateEvent(id, eventRequestDto);
+        return new ResponseEntity<>(post, HttpStatus.OK);
     }
 
     // ID로 게시글 삭제
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePostById(@PathVariable Long id) {
-        try {
-            eventService.deleteEventById(id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        eventService.deleteEventById(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     // 작성자 이름으로 게시글 삭제
     @DeleteMapping("/author")
     public ResponseEntity<Void> deletePostByAuthorName(@RequestBody EventRequestDto eventRequestDto) {
-        try {
-            eventService.deleteEventByAuthorName(eventRequestDto);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        eventService.deleteEventByAuthorName(eventRequestDto);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

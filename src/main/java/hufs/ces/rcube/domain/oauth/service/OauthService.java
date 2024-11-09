@@ -1,5 +1,7 @@
 package hufs.ces.rcube.domain.oauth.service;
 
+import hufs.ces.rcube.domain.exception.CommonErrorCode;
+import hufs.ces.rcube.domain.exception.RestApiException;
 import hufs.ces.rcube.domain.member.entity.Member;
 import hufs.ces.rcube.domain.oauth.dto.LoginResponse;
 import hufs.ces.rcube.domain.oauth.dto.OauthTokenResponse;
@@ -31,7 +33,6 @@ public class OauthService {
 
     // WebClient 인스턴스를 재사용
     private final WebClient webClient = WebClient.builder().build();
-
 
     public LoginResponse login(String providerName, String code) {
         // 제공자 정보 가져오기
@@ -68,17 +69,17 @@ public class OauthService {
                 .uri(provider.getTokenUrl())
                 .headers(header -> {
                     header.setBasicAuth(provider.getClientId(), provider.getClientSecret());
-                    header.setContentType(MediaType.APPLICATION_FORM_URLENCODED); //기본으로 설정
+                    header.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
                     header.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
                     header.setAcceptCharset(Collections.singletonList(StandardCharsets.UTF_8));
                 })
                 .bodyValue(tokenRequest(code, provider))
-                .retrieve() //요청실행, 응답 가져옴
+                .retrieve()
                 .onStatus(status -> !status.is2xxSuccessful(), clientResponse ->
-                        Mono.error(new RuntimeException("Failed to retrieve access token: " + clientResponse.statusCode()))
+                        Mono.error(new RestApiException(CommonErrorCode.FAILED_TO_RETRIEVE_ACCESS_TOKEN, "Access token을 가져오지 못했습니다: " + clientResponse.statusCode()))
                 )
-                .bodyToMono(OauthTokenResponse.class)//반응형 프로그래밍에서 샤용되는 타입
-                .block(); //비동기처리 방식에서 동기적으로 결과를 얻기 위한 방법
+                .bodyToMono(OauthTokenResponse.class)
+                .block();
     }
 
     private Member saveOrUpdate(UserProfile userProfile) {
@@ -110,7 +111,7 @@ public class OauthService {
                 .headers(header -> header.setBearerAuth(tokenResponse.getAccessToken()))
                 .retrieve()
                 .onStatus(status -> !status.is2xxSuccessful(), clientResponse ->
-                        Mono.error(new RuntimeException("Failed to retrieve user attributes: " + clientResponse.statusCode()))
+                        Mono.error(new RestApiException(CommonErrorCode.FAILED_TO_RETRIEVE_USER_ATTRIBUTES, "유저 정보를 가져오지 못했습니다: " + clientResponse.statusCode()))
                 )
                 .bodyToMono(new ParameterizedTypeReference<Map<String, Object>>() {})
                 .block();

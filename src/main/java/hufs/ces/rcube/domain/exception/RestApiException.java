@@ -1,8 +1,6 @@
 package hufs.ces.rcube.domain.exception;
 
-import hufs.ces.rcube.domain.execption.ErrorCode;
 import lombok.Getter;
-import org.springframework.http.HttpStatus;
 
 @Getter
 public class RestApiException extends RuntimeException {
