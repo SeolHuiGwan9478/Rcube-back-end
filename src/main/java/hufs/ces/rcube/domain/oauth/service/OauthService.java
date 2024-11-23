@@ -8,7 +8,6 @@ import hufs.ces.rcube.domain.oauth.dto.OauthTokenResponse;
 import hufs.ces.rcube.domain.oauth.domain.OauthProvider;
 import hufs.ces.rcube.domain.oauth.dto.UserProfile;
 import hufs.ces.rcube.domain.oauth.repository.InMemoryProviderRepository;
-import hufs.ces.rcube.domain.oauth.repository.RedisProviderRepository;
 import hufs.ces.rcube.domain.oauth.utill.OauthAttributes;
 import lombok.AllArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
@@ -28,7 +27,6 @@ import reactor.core.publisher.Mono;
 @Service
 @AllArgsConstructor
 public class OauthService {
-    private final RedisProviderRepository redisProviderRepository;  // Redis 저장소 사용
     private final MemberRepository memberRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final InMemoryProviderRepository inMemoryProviderRepository;
@@ -37,15 +35,10 @@ public class OauthService {
 
     public LoginResponse login(String providerName, String code) {
         // 제공자 정보 가져오기 (Redis에서 먼저 확인)
-        OauthProvider provider = redisProviderRepository.findByProviderName(providerName);  // Redis에서 캐시된 정보 조회
+        OauthProvider provider = inMemoryProviderRepository.findByProviderName(providerName);  // Redis에서 캐시된 정보 조회
 
         if (provider == null) {
-            // 만약 Redis에서 찾을 수 없으면, InMemoryProviderRepository 또는 DB에서 가져옴
-            provider = inMemoryProviderRepository.findByProviderName(providerName);
-            if (provider != null) {
-                // Redis에 저장하여 다음부터 빠르게 조회할 수 있도록 함
-                redisProviderRepository.save(providerName, provider);  // Redis에 저장
-            }
+            throw new IllegalArgumentException("해당 제공자를 찾을 수 없습니다: " + providerName);
         }
 
         // Access Token 가져오기
