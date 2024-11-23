@@ -6,7 +6,6 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.reactive.result.method.annotation.ResponseEntityExceptionHandler;
-import org.springframework.web.server.ResponseStatusException;
 import hufs.ces.rcube.domain.exception.RestApiException;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,10 +31,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(response, e.getErrorCode().getHttpStatus());
     }
 
-
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<Object> 
-    eIllegalArgument(IllegalArgumentException e) {
+    public ResponseEntity<Object> eIllegalArgument(IllegalArgumentException e) {
         log.warn("Invalid Argument Exception: {}", e.getMessage(), e);
         ErrorCode errorCode = CommonErrorCode.INVALID_PARAMETER;
         return handleExceptionInternal(errorCode, e.getMessage());
@@ -46,13 +43,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         log.error("Null Pointer Exception: {}", e.getMessage(), e);
         ErrorCode errorCode = CommonErrorCode.INTERNAL_SERVER_ERROR;
         return handleExceptionInternal(errorCode, "Unexpected null value encountered.");
-    }
-
-    @ExceptionHandler(ResponseStatusException.class)
-    public ResponseEntity<Object> handleResourceNotFound(ResponseStatusException e) {
-        log.warn("Resource Not Found Exception: {}", e.getMessage(), e);
-        ErrorCode errorCode = CommonErrorCode.RESOURCE_NOT_FOUND;
-        return handleExceptionInternal(errorCode, "Requested resource not found.");
     }
 
     @ExceptionHandler(SecurityException.class)

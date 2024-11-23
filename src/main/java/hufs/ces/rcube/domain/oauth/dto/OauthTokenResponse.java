@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @Builder
-public class OauthTokenResponse {
+public class OauthTokenResponse { //OAuth 서버와의 통신을 통해 엑세스 토큰을 받아올 dto설정
     @JsonProperty("access_token")
     private String accessToken;
 

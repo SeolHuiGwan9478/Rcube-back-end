@@ -34,8 +34,8 @@ public class OauthService {
     private final WebClient webClient = WebClient.builder().build();
 
     public LoginResponse login(String providerName, String code) {
-        // 제공자 정보 가져오기 (Redis에서 먼저 확인)
-        OauthProvider provider = inMemoryProviderRepository.findByProviderName(providerName);  // Redis에서 캐시된 정보 조회
+        // 제공자 정보 가져오기
+        OauthProvider provider = inMemoryProviderRepository.findByProviderName(providerName);  // 메모리에서 provider정보 가져오기
 
         if (provider == null) {
             throw new IllegalArgumentException("해당 제공자를 찾을 수 없습니다: " + providerName);
@@ -66,31 +66,31 @@ public class OauthService {
                 .build();
     }
 
-    // Access Token을 받아오는 메서드
+    // Access Token을 받아오는 메서드, webClient는 비동기 http요청을 보낼 떄 사용,
     protected OauthTokenResponse getToken(String code, OauthProvider provider) {
         return webClient.post()
                 .uri(provider.getTokenUrl())
                 .headers(header -> {
                     header.setBasicAuth(provider.getClientId(), provider.getClientSecret());
                     header.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-                    header.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-                    header.setAcceptCharset(Collections.singletonList(StandardCharsets.UTF_8));
+                    header.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON)); //반환받고 싶은 응답 형식
+                    header.setAcceptCharset(Collections.singletonList(StandardCharsets.UTF_8)); //문자 인코딩 방식
                 })
                 .bodyValue(tokenRequest(code, provider))
-                .retrieve()
+                .retrieve()//WebClient가 요청을 보내고 응답을 비동기적으로 받을 수 있도록 함
                 .onStatus(status -> !status.is2xxSuccessful(), clientResponse ->
                         Mono.error(new RestApiException(CommonErrorCode.FAILED_TO_RETRIEVE_ACCESS_TOKEN, "Access token을 가져오지 못했습니다: " + clientResponse.statusCode()))
                 )
-                .bodyToMono(OauthTokenResponse.class)
-                .block();
+                .bodyToMono(OauthTokenResponse.class)//응답 본문을 OauthTokenResponse클래스로 변환, Mono는 Spring WebFlux에서 비동기적으로 결과를 처리하는 리액티브 타입
+                .block(); //직관적으로 보기 위해 동기적으로 처리
     }
 
     private Member saveOrUpdate(UserProfile userProfile) {
         Member member = memberRepository.findByOauthId(userProfile.getOauthId())
                 .map(entity -> entity.update(
                         userProfile.getEmail(), userProfile.getName(), userProfile.getImageUrl()))
-                .orElseGet(userProfile::toMember);
-        return memberRepository.save(member);
+                .orElseGet(userProfile::toMember); //해당 사용자가 이미 존재하면 그 사용자의 정보를 업데이트, 없으면 새로 생성하여 데이터베이스에 저장
+        return memberRepository.save(member); //userprofile을 Member로 변환
     }
 
     // 토큰 요청에 필요한 파라미터 설정 메서드

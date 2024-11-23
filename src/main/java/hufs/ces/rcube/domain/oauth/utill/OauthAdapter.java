@@ -13,7 +13,7 @@ public class OauthAdapter {
         Map<String, OauthProvider> oauthProviderMap = new HashMap<>();
 
         properties.getUser().forEach((key, user) -> {
-            OauthProperties.Provider provider = properties.getProvider().get(key); //구글에 해당하는 provider정보 가져오기
+            OauthProperties.Provider provider = properties.getProvider().get(key); //구글에 해당하는 provider정보 가져오기, key를 이용해 user와 관련된 provider정보를 가져옴
             if (provider != null) {//클라이언트 정보말고 provider정보가 있어야 의미가 있으므로
                 OauthProvider oauthProvider = OauthProvider.builder()
                         .clientId(user.getClientId())
